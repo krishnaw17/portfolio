@@ -1,29 +1,11 @@
 import { useRef } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
-import { useInView } from '@/hooks/useInView';
-import { useCountUp } from '@/hooks/useCountUp';
-import {SITE , 
-  // STATS
- } from '@/constants/content';
+import { SITE } from '@/constants/content';
 import { TextReveal } from '@/components/ui/TextReveal';
-
-function Stat({ value, suffix, label, start }: { value: number; suffix: string; label: string; start: boolean }) {
-  const n = useCountUp(value, 1600, start);
-  return (
-    <div>
-      <div className="text-display text-4xl md:text-5xl tracking-tightest tabular-nums">
-        {n}
-        <span className="gradient-text-blue">{suffix}</span>
-      </div>
-      <div className="mt-2 text-sm text-fg-muted">{label}</div>
-    </div>
-  );
-}
 
 export function About() {
   const sectionRef = useRef<HTMLElement>(null);
-  const statsRef = useRef<HTMLDivElement>(null);
-  const { inView } = useInView<HTMLDivElement>({ threshold: 0.2, once: true });
+
   const { scrollYProgress } = useScroll({ target: sectionRef, offset: ['start end', 'end start'] });
   const y = useTransform(scrollYProgress, [0, 1], [60, -60]);
 
@@ -60,11 +42,6 @@ export function About() {
               </p>
             </motion.div>
 
-            {/* <div ref={statsRef} className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-8 border-t border-line pt-10">
-              {STATS.map((s) => (
-                <Stat key={s.label} {...s} start={inView} />
-              ))}
-            </div> */}
 
             <div className="mt-12 flex flex-wrap gap-2">
               {['TypeScript', 'Javascript', 'C', 'C++', 'React', 'Three.js', 'Node.js', 'PostgreSQL', 'Express.js', 'MongoDB', 'Redis'].map(

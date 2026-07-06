@@ -1,10 +1,11 @@
-import type { Project, 
-  Experience, 
-  Skill, 
-  Education, 
-  Certification, 
+import type {
+  Project,
+  Experience,
+  Skill,
+  Education,
+  Certification,
   // Testimonial
- } from '@/types';
+} from '@/types';
 
 import resumePdf from './KrishnaWadhwaResume.pdf';
 
@@ -13,7 +14,7 @@ export const SITE = {
   shortName: 'Krishna',
   role: 'Software Engineer',
   email: 'krishnawadhwa2@gmail.com',
-  phone: +91-9461166675,
+  phone: +91 - 9461166675,
   location: 'Jaipur, India',
   social: {
     github: 'https://github.com/krishnaw17',
@@ -41,9 +42,9 @@ export const HEADLINE_ROTATIONS = [
 export const SKILLS: Skill[] = [
   //languages
   { name: 'JavaScript', category: 'languages', level: 90 },
-  { name: 'C', category: 'languages', level: 80},
-  { name: 'C++', category: 'languages', level: 85},
-  
+  { name: 'C', category: 'languages', level: 80 },
+  { name: 'C++', category: 'languages', level: 85 },
+
   //Frontend
   { name: 'React', category: 'frontend', level: 98 },
   { name: 'TypeScript', category: 'frontend', level: 96 },
@@ -92,6 +93,7 @@ export const PROJECTS: Project[] = [
       'An AI-powered resume screening platform that evaluates resumes against job descriptions while removing bias through automated candidate data sanitization.',
     longDescription:
       'HireBlind is a full-stack AI recruitment platform built using Next.js, React.js, Node.js, MongoDB, JWT, and Gemini 2.0 Flash. The platform automatically extracts and sanitizes candidate information using Regex and LLM-based parsing, evaluates resumes against job descriptions, generates explainable AI scores, provides recruiter analytics, and implements secure JWT authentication with Role-Based Access Control (RBAC).',
+    image: '/projects/hireblind.png',
     tags: [
       'Next.js',
       'React',
@@ -128,6 +130,7 @@ export const PROJECTS: Project[] = [
       'Official website for SKIT Jaipur’s annual cultural festival serving 4,000+ attendees.',
     longDescription:
       'Developed and deployed the official Pravah 2025 website using Next.js, React.js, and Tailwind CSS. The platform centralized event schedules, announcements, registrations, and responsive navigation while ensuring smooth performance across devices.',
+    image: '/projects/pravah.png',
     tags: [
       'Next.js',
       'React.js',
@@ -159,6 +162,7 @@ export const PROJECTS: Project[] = [
       'A responsive YouTube clone with real-time video search and playback powered by RapidAPI.',
     longDescription:
       'Developed a modern YouTube-inspired application using React.js, Redux Toolkit, Tailwind CSS, and RapidAPI. Implemented routed navigation, persistent search, dynamic video rendering, category filtering, and optimized performance.',
+    image: '/projects/youtube.png',
     tags: [
       'React.js',
       'Redux Toolkit',

@@ -20,6 +20,15 @@ function ProjectImage({ p, i }: { p: Project; i: number }) {
   ];
   const c = palettes[i % palettes.length];
 
+  if (p.image) {
+    return (
+      <div className="relative h-full w-full overflow-hidden">
+        <img src={p.image} alt={p.title} className="w-full h-full object-cover" />
+        <div className="pointer-events-none absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-bg/80 to-transparent" />
+      </div>
+    );
+  }
+
   return (
     <div className="relative h-full w-full overflow-hidden">
       <svg viewBox="0 0 600 400" className="h-full w-full" preserveAspectRatio="xMidYMid slice">

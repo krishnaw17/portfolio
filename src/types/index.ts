@@ -3,7 +3,7 @@ export interface Project {
   title: string;
   description: string;
   longDescription: string;
-  // image: string;
+  image?: string;
   tags: string[];
   category: 'web' | 'ai' | 'systems' | 'design';
   github?: string;

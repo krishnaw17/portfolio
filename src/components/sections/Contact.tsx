@@ -41,7 +41,7 @@ export function Contact() {
   };
 
   return (
-    <section id="contact" className="relative py-16 md:py-24 border-t border-line">
+    <section id="contact" className="relative pt-16 md:pt-24 pb-0 border-t border-line">
       <div className="container-x">
         <div className="grid gap-12 lg:grid-cols-12">
           <div className="lg:col-span-6">

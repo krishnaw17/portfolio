@@ -32,9 +32,11 @@ function ParticleField({ count = 800 }: { count?: number }) {
     };
   }, [count]);
 
-  useFrame((state) => {
-    const t = state.clock.elapsedTime;
-    if (mat.current) mat.current.uniforms.uTime.value = t;
+  const time = useRef(0);
+  
+  useFrame((state, delta) => {
+    time.current += delta;
+    if (mat.current) mat.current.uniforms.uTime.value = time.current;
   });
 
   return (
@@ -68,7 +70,7 @@ function StarfieldContents() {
   const isMobile = useMedia('(max-width: 768px)');
   return (
     <>
-      <ParticleField count={isMobile ? 400 : 900} />
+      <ParticleField count={isMobile ? 1200 : 3000} />
       <AdaptiveDpr pixelated />
       <AdaptiveEvents />
     </>

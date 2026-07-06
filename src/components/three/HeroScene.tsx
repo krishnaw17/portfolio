@@ -35,8 +35,11 @@ function CodeCube() {
     [],
   );
 
-  useFrame((state) => {
-  const t = state.clock.elapsedTime;
+  const time = useRef(0);
+
+  useFrame((state, delta) => {
+  time.current += delta;
+  const t = time.current;
 
   if (mat.current) {
     mat.current.uniforms.uTime.value = t;

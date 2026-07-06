@@ -34,7 +34,7 @@ function ParticleField({ count = 800 }: { count?: number }) {
 
   const time = useRef(0);
   
-  useFrame((state, delta) => {
+  useFrame((_, delta) => {
     time.current += delta;
     if (mat.current) mat.current.uniforms.uTime.value = time.current;
   });

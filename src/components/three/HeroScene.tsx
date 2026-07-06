@@ -37,7 +37,7 @@ function CodeCube() {
 
   const time = useRef(0);
 
-  useFrame((state, delta) => {
+  useFrame((_, delta) => {
   time.current += delta;
   const t = time.current;
 

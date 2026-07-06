@@ -17,8 +17,7 @@ import {
 import { BlendFunction } from 'postprocessing';
 import * as THREE from 'three';
 // import { useNormalizedMouse } from '@/hooks/useMouse';
-import { useMedia } from '@/hooks/useMedia';
-import { cubeFragment, cubeVertex, particlesFragment, particlesVertex } from '@/three/shaders/cubeShader';
+import { cubeFragment, cubeVertex } from '@/three/shaders/cubeShader';
 
 function CodeCube() {
   const mesh = useRef<THREE.Mesh>(null!);
@@ -84,78 +83,14 @@ function CodeCube() {
   );
 }
 
-function ParticleField({ count = 800 }: { count?: number }) {
-  const ref = useRef<THREE.Points>(null!);
-  const mat = useRef<THREE.ShaderMaterial>(null!);
-  // const { rawX, rawY } = useNormalizedMouse();
 
-  const { positions, randoms, uniforms } = useMemo(() => {
-    const pos = new Float32Array(count * 3);
-    const r = new Float32Array(count);
-    for (let i = 0; i < count; i++) {
-      const radius = 4 + Math.random() * 6;
-      const theta = Math.random() * Math.PI * 2;
-      const phi = Math.acos(2 * Math.random() - 1);
-      pos[i * 3] = radius * Math.sin(phi) * Math.cos(theta);
-      pos[i * 3 + 1] = (Math.random() - 0.5) * 6;
-      pos[i * 3 + 2] = radius * Math.sin(phi) * Math.sin(theta);
-      r[i] = Math.random();
-    }
-    return {
-      positions: pos,
-      randoms: r,
-      uniforms: {
-        uTime: { value: 0 },
-        uSize: { value: 30 },
-        uColor: { value: new THREE.Color('#3b82f6') },
-      },
-    };
-  }, [count]);
-
-  useFrame((state) => {
-    const t = state.clock.elapsedTime;
-    if (mat.current) mat.current.uniforms.uTime.value = t;
-    // if (ref.current) {
-    //   ref.current.rotation.y = THREE.MathUtils.lerp(ref.current.rotation.y, rawX * 0.2, 0.05);
-    //   ref.current.rotation.x = THREE.MathUtils.lerp(ref.current.rotation.x, -rawY * 0.15, 0.05);
-    // }
-  });
-
-  return (
-    <points ref={ref} frustumCulled={false}>
-      <bufferGeometry>
-        <bufferAttribute
-          attach="attributes-position"
-          args={[positions, 3]}
-          count={positions.length / 3}
-        />
-        <bufferAttribute
-          attach="attributes-aRandom"
-          args={[randoms, 1]}
-          count={randoms.length}
-        />
-      </bufferGeometry>
-      <shaderMaterial
-        ref={mat}
-        vertexShader={particlesVertex}
-        fragmentShader={particlesFragment}
-        uniforms={uniforms}
-        transparent
-        depthWrite={false}
-        blending={THREE.AdditiveBlending}
-      />
-    </points>
-  );
-}
 
 function SceneContents() {
-  const isMobile = useMedia('(max-width: 768px)');
   return (
     <>
       <ambientLight intensity={0.4} />
       <directionalLight position={[3, 4, 2]} intensity={0.45} color="#ffffff" />
       <CodeCube />
-      <ParticleField count={isMobile ? 350 : 800} />
       <Environment preset="night" />
       <EffectComposer>
         <Bloom

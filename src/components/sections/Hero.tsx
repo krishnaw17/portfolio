@@ -20,12 +20,9 @@ export function Hero() {
   return (
     <section
       id="hero"
-      className="relative min-h-[100svh] w-full overflow-hidden noise-overlay"
+      className="relative min-h-[100svh] w-full overflow-hidden"
     >
-      {/* Animated background grid */}
-      <div className="pointer-events-none absolute inset-0 grid-bg opacity-[0.18] mask-fade-b" />
-      <div className="pointer-events-none absolute inset-0 bg-radial-fade opacity-40" />
-      <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(5,5,5,0.36)_0%,rgba(5,5,5,0.18)_30%,rgba(5,5,5,0.62)_100%)]" />
+
 
       {/* 3D Canvas */}
       <div className="absolute inset-0 z-0">

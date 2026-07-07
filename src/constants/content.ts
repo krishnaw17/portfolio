@@ -48,41 +48,34 @@ export const SKILLS: Skill[] = [
   //Frontend
   { name: 'React', category: 'frontend', level: 98 },
   { name: 'TypeScript', category: 'frontend', level: 96 },
-  { name: 'Next.js', category: 'frontend', level: 95 },
-  { name: 'Three.js / R3F', category: 'frontend', level: 88 },
   { name: 'Framer Motion', category: 'frontend', level: 92 },
   { name: 'Tailwind CSS', category: 'frontend', level: 96 },
-  // { name: 'WebGL / GLSL', category: 'frontend', level: 78 },
-  // { name: 'Vue / Nuxt', category: 'frontend', level: 80 },
 
-  // Backend
-  { name: 'Node.js', category: 'backend', level: 94 },
-  { name: 'Express.js', category: 'backend', level: 90 },
-  // { name: 'Go', category: 'backend', level: 82 },
-  // { name: 'Python', category: 'backend', level: 88 },
-  // { name: 'Rust', category: 'backend', level: 70 },
-  // { name: 'GraphQL', category: 'backend', level: 90 },
-  // { name: 'gRPC', category: 'backend', level: 78 },
+   
+  // { name: 'Three.js / R3F', category: 'frontend', level: 88 },
 
-  // Cloud
-  // { name: 'AWS', category: 'cloud', level: 90 },
-  // { name: 'GCP', category: 'cloud', level: 82 },
-  { name: 'Vercel', category: 'cloud', level: 94 },
-  { name: 'Render', category: 'cloud', level: 86 },
-  // DevOps
-  // { name: 'Docker', category: 'devops', level: 92 },
-  // { name: 'Kubernetes', category: 'devops', level: 84 },
-  // { name: 'Terraform', category: 'devops', level: 80 },
-  // { name: 'CI/CD', category: 'devops', level: 90 },
-  // AI
-  { name: 'Claude Code', category: 'ai', level: 92 },
-  // { name: 'LangChain', category: 'ai', level: 86 },
-  { name: 'OpenAI / LLMs', category: 'ai', level: 90 },
-  // { name: 'Vector DBs', category: 'ai', level: 84 },
+  // Full stack 
+  { name: 'Next.js', category: 'full-stack', level: 95 },
+  { name: 'Node.js', category: 'full-stack', level: 94 },
+  { name: 'Express.js', category: 'full-stack', level: 90 },
+  
   // Databases
-  { name: 'PostgreSQL', category: 'databases', level: 94 },
+  { name: 'SQL', category: 'databases', level: 94 },
+  { name: 'NoSQL', category: 'databases', level: 82 },
   { name: 'Redis', category: 'databases', level: 90 },
-  { name: 'MongoDB', category: 'databases', level: 82 },
+
+  // Deployment
+  { name: 'Vercel', category: 'deployment', level: 94 },
+  { name: 'Render', category: 'deployment', level: 86 },
+  
+  //tools
+  { name: 'Git', category: 'tools', level: 90 },
+  {name: 'Github', category: 'tools', level: 87},
+  { name: 'Postman', category: 'tools', level: 94 },
+  
+  // AI
+  { name: 'Claude', category: 'ai', level: 92 },
+  { name: 'ChatGPT', category: 'ai', level: 90 },
 ];
 
 export const PROJECTS: Project[] = [
@@ -259,7 +252,7 @@ export const EDUCATION: Education[] = [
     field: 'Class XII',
     period: '2022 — 2023',
     description:
-      'Completed Class XII with 88% marks, building a strong foundation in Mathematics, Physics, and Computer Science.',
+      'Completed Class XII with 88% marks, building a strong foundation in Mathematics, Physics, and Chemistry.',
   },
   {
     id: 'stpaul',

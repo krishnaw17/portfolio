@@ -10,10 +10,11 @@ const CATEGORIES = [
   { key: 'all', label: 'All' },
   { key: 'languages', label: 'Languages' },
   { key: 'frontend', label: 'Frontend' },
-  { key: 'backend', label: 'Backend' },
-  { key: 'cloud', label: 'Cloud' },
-  { key: 'ai', label: 'AI / ML' },
+  { key: 'full-stack', label: 'Full-Stack' },
   { key: 'databases', label: 'Databases' },
+  { key: 'deployment', label: 'Deployment' },
+  { key: 'tools', label: 'Developer Tools' },
+  { key: 'ai', label: 'AI-Tools' },
 ] as const;
 
 export function Skills() {

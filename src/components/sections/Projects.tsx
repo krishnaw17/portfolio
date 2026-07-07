@@ -162,11 +162,11 @@ function ProjectCard({ p, i }: { p: Project; i: number }) {
         </h3>
         <p className="mt-3 text-fg-muted text-pretty">{p.description}</p>
 
-        <div className="mt-6 grid grid-cols-3 gap-3">
+        <div className="mt-6 grid grid-cols-2 sm:grid-cols-3 gap-2 sm:gap-3">
           {p.metrics.map((m) => (
-            <div key={m.label} className="rounded-xl border border-line p-3">
-              <div className="font-display text-lg text-fg">{m.value}</div>
-              <div className="text-[10px] uppercase tracking-widest text-fg-subtle">
+            <div key={m.label} className="rounded-xl border border-line p-2.5 sm:p-3">
+              <div className="font-display text-base sm:text-lg text-fg">{m.value}</div>
+              <div className="text-[9px] sm:text-[10px] uppercase tracking-widest text-fg-subtle mt-0.5 break-words">
                 {m.label}
               </div>
             </div>

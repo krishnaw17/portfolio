@@ -30,7 +30,7 @@ export interface Experience {
 
 export interface Skill {
   name: string;
-  category: 'languages' | 'backend' | 'cloud' | 'frontend' | 'ai' | 'databases';
+  category: 'languages' | 'full-stack' | 'deployment' | 'frontend' | 'databases' | 'ai' | 'tools';
   level: number; // 0..100
   icon?: string;
 }

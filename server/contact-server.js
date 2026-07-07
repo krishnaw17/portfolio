@@ -1,7 +1,18 @@
 import 'dotenv/config';
 import express from 'express';
 import path from 'path';
+import helmet from 'helmet';
 import { fileURLToPath } from 'url';
+import { authenticate, authorize, generateToken, comparePassword, hashPassword } from './auth.js';
+import { contactLimiter, authLimiter, apiLimiter } from './rate-limiter.js';
+import {
+  readContent,
+  updateSection,
+  addItem,
+  updateItem,
+  deleteItem,
+  initializeIfEmpty,
+} from './data-store.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -17,20 +28,77 @@ const resendApiKey = process.env.RESEND_API_KEY;
 const resendFromEmail =
   process.env.RESEND_FROM_EMAIL || 'Portfolio <onboarding@resend.dev>';
 
+// Admin credentials from env
+const adminEmail = process.env.ADMIN_EMAIL || 'krishnawadhwa2@gmail.com';
+const adminPasswordHash = process.env.ADMIN_PASSWORD_HASH || '';
+
 if (!resendApiKey) {
   console.warn('[contact-server] ⚠️  RESEND_API_KEY is not set in .env');
 }
 
+if (!adminPasswordHash) {
+  console.warn('[contact-server] ⚠️  ADMIN_PASSWORD_HASH is not set in .env');
+  console.warn('[contact-server]    Run: node -e "import(\'bcryptjs\').then(b=>b.hash(\'yourpassword\',12).then(console.log))"');
+}
+
+// ── Allowed Origins ──────────────────────────────────────────────────────────
+const allowedOrigins = (process.env.ALLOWED_ORIGINS || 'http://localhost:5173,http://localhost:3001')
+  .split(',')
+  .map((o) => o.trim());
+
+// ── Security Headers ─────────────────────────────────────────────────────────
+app.use(
+  helmet({
+    contentSecurityPolicy: false, // Let Vite / React handle CSP
+    crossOriginEmbedderPolicy: false,
+  })
+);
+
 // ── CORS ──────────────────────────────────────────────────────────────────────
 app.use((req, res, next) => {
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'POST, GET, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  const origin = req.headers.origin;
+  if (origin && allowedOrigins.includes(origin)) {
+    res.setHeader('Access-Control-Allow-Origin', origin);
+  }
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  res.setHeader('Access-Control-Allow-Credentials', 'true');
   if (req.method === 'OPTIONS') return res.sendStatus(204);
   next();
 });
 
+// ── Body Parser ──────────────────────────────────────────────────────────────
 app.use(express.json({ limit: '1mb' }));
+
+// ── API-Wide Rate Limiter ────────────────────────────────────────────────────
+app.use('/api', apiLimiter);
+
+// ── Request Logger ───────────────────────────────────────────────────────────
+app.use('/api', (req, _res, next) => {
+  console.log(`[${new Date().toISOString()}] ${req.method} ${req.url}`);
+  next();
+});
+
+// ── Initialize Data Store ────────────────────────────────────────────────────
+initializeIfEmpty({
+  site: {
+    name: 'Krishna Wadhwa',
+    shortName: 'Krishna',
+    role: 'Software Engineer',
+    email: 'krishnawadhwa2@gmail.com',
+    location: 'Jaipur, India',
+    social: {
+      github: 'https://github.com/krishnaw17',
+      linkedin: 'https://www.linkedin.com/in/krishna-wadhwa-3396a2274/',
+      twitter: 'https://x.com/KRISHNAWAD48783',
+    },
+  },
+  skills: [],
+  projects: [],
+  experience: [],
+  education: [],
+  certifications: [],
+}).catch(console.error);
 
 // ── Resend helper ─────────────────────────────────────────────────────────────
 async function sendResendEmail({ to, subject, html, text, replyTo }) {
@@ -199,12 +267,21 @@ function autoReplyHtml({ name }) {
 </body></html>`;
 }
 
-// ── /api/contact ──────────────────────────────────────────────────────────────
-app.post('/api/contact', async (req, res) => {
+// ══════════════════════════════════════════════════════════════════════════════
+// PUBLIC ROUTES
+// ══════════════════════════════════════════════════════════════════════════════
+
+// ── /api/contact (rate-limited) ───────────────────────────────────────────────
+app.post('/api/contact', contactLimiter, async (req, res) => {
   const { name, email, message } = req.body ?? {};
 
   if (!name?.trim() || !email?.trim() || !message?.trim()) {
     return res.status(400).json({ message: 'Name, email, and message are required.' });
+  }
+
+  // Input length limits
+  if (name.length > 100 || email.length > 254 || message.length > 5000) {
+    return res.status(400).json({ message: 'Input exceeds maximum length.' });
   }
 
   if (!resendApiKey) {
@@ -252,8 +329,6 @@ app.post('/api/contact', async (req, res) => {
     console.log(`[contact-server] ✅ Auto-reply sent to ${email}`);
   } catch (err) {
     // Auto-reply failure is non-fatal — owner was already notified.
-    // Common cause: Resend free plan requires a verified custom domain
-    // to send to addresses outside your Resend account.
     console.warn(`[contact-server] ⚠️  Auto-reply to ${email} failed (${err.message})`);
     console.warn('[contact-server]    → Add a verified custom domain in Resend to enable auto-replies.');
   }
@@ -261,8 +336,162 @@ app.post('/api/contact', async (req, res) => {
   return res.status(200).json({ message: 'Message sent successfully.' });
 });
 
+// ── Public content endpoint ───────────────────────────────────────────────────
+app.get('/api/content', (_req, res) => {
+  const content = readContent();
+  if (!content) {
+    return res.status(404).json({ message: 'Content not found.' });
+  }
+  // Strip meta info for public consumption
+  const { _meta, ...publicContent } = content;
+  return res.json(publicContent);
+});
+
 // ── Health check ──────────────────────────────────────────────────────────────
 app.get('/api/health', (_req, res) => res.json({ status: 'ok', from: resendFromEmail }));
+
+// ══════════════════════════════════════════════════════════════════════════════
+// AUTH ROUTES
+// ══════════════════════════════════════════════════════════════════════════════
+
+// ── POST /api/auth/login ──────────────────────────────────────────────────────
+app.post('/api/auth/login', authLimiter, async (req, res) => {
+  const { email, password } = req.body ?? {};
+
+  if (!email || !password) {
+    return res.status(400).json({ message: 'Email and password are required.' });
+  }
+
+  // Check against admin credentials
+  if (email !== adminEmail) {
+    return res.status(401).json({ message: 'Invalid credentials.' });
+  }
+
+  if (!adminPasswordHash) {
+    return res.status(500).json({ message: 'Admin account is not configured.' });
+  }
+
+  const valid = await comparePassword(password, adminPasswordHash);
+  if (!valid) {
+    return res.status(401).json({ message: 'Invalid credentials.' });
+  }
+
+  const token = generateToken({ email, role: 'admin' });
+  return res.json({ token, user: { email, role: 'admin' } });
+});
+
+// ── POST /api/auth/verify ─────────────────────────────────────────────────────
+app.post('/api/auth/verify', authenticate, (req, res) => {
+  return res.json({ valid: true, user: req.user });
+});
+
+// ══════════════════════════════════════════════════════════════════════════════
+// ADMIN ROUTES (protected)
+// ══════════════════════════════════════════════════════════════════════════════
+
+// ── GET /api/admin/content ────────────────────────────────────────────────────
+app.get('/api/admin/content', authenticate, authorize('admin'), (_req, res) => {
+  const content = readContent();
+  if (!content) {
+    return res.status(404).json({ message: 'Content not found.' });
+  }
+  return res.json(content);
+});
+
+// ── PUT /api/admin/content/:section ───────────────────────────────────────────
+app.put('/api/admin/content/:section', authenticate, authorize('admin'), async (req, res) => {
+  const { section } = req.params;
+  const validSections = ['site', 'skills', 'projects', 'experience', 'education', 'certifications', 'headlineRotations'];
+
+  if (!validSections.includes(section)) {
+    return res.status(400).json({ message: `Invalid section: ${section}` });
+  }
+
+  const updated = await updateSection(section, req.body);
+  if (updated === null) {
+    return res.status(500).json({ message: 'Failed to update section.' });
+  }
+
+  return res.json({ message: `${section} updated.`, data: updated });
+});
+
+// ── POST /api/admin/content/:section ──────────────────────────────────────────
+app.post('/api/admin/content/:section', authenticate, authorize('admin'), async (req, res) => {
+  const { section } = req.params;
+  const validArraySections = ['skills', 'projects', 'experience', 'education', 'certifications'];
+
+  if (!validArraySections.includes(section)) {
+    return res.status(400).json({ message: `Cannot add items to: ${section}` });
+  }
+
+  const item = await addItem(section, req.body);
+  if (item === null) {
+    return res.status(500).json({ message: 'Failed to add item.' });
+  }
+
+  return res.status(201).json({ message: 'Item added.', data: item });
+});
+
+// ── PUT /api/admin/content/:section/:id ───────────────────────────────────────
+app.put('/api/admin/content/:section/:id', authenticate, authorize('admin'), async (req, res) => {
+  const { section, id } = req.params;
+  const validArraySections = ['skills', 'projects', 'experience', 'education', 'certifications'];
+
+  if (!validArraySections.includes(section)) {
+    return res.status(400).json({ message: `Cannot update items in: ${section}` });
+  }
+
+  const updated = await updateItem(section, id, req.body);
+  if (updated === null) {
+    return res.status(404).json({ message: 'Item not found.' });
+  }
+
+  return res.json({ message: 'Item updated.', data: updated });
+});
+
+// ── DELETE /api/admin/content/:section/:id ────────────────────────────────────
+app.delete('/api/admin/content/:section/:id', authenticate, authorize('admin'), async (req, res) => {
+  const { section, id } = req.params;
+  const validArraySections = ['skills', 'projects', 'experience', 'education', 'certifications'];
+
+  if (!validArraySections.includes(section)) {
+    return res.status(400).json({ message: `Cannot delete items from: ${section}` });
+  }
+
+  const removed = await deleteItem(section, id);
+  if (removed === null) {
+    return res.status(404).json({ message: 'Item not found.' });
+  }
+
+  return res.json({ message: 'Item deleted.', data: removed });
+});
+
+// ── POST /api/admin/change-password ───────────────────────────────────────────
+app.post('/api/admin/change-password', authenticate, authorize('admin'), async (req, res) => {
+  const { currentPassword, newPassword } = req.body ?? {};
+
+  if (!currentPassword || !newPassword) {
+    return res.status(400).json({ message: 'Current and new password are required.' });
+  }
+
+  if (newPassword.length < 8) {
+    return res.status(400).json({ message: 'New password must be at least 8 characters.' });
+  }
+
+  const valid = await comparePassword(currentPassword, adminPasswordHash);
+  if (!valid) {
+    return res.status(401).json({ message: 'Current password is incorrect.' });
+  }
+
+  const newHash = await hashPassword(newPassword);
+  console.log('[contact-server] 🔑 New password hash generated. Update ADMIN_PASSWORD_HASH in .env:');
+  console.log(newHash);
+
+  return res.json({
+    message: 'Password hash generated. Update your .env file with the new ADMIN_PASSWORD_HASH value.',
+    hash: newHash,
+  });
+});
 
 // ── Serve Frontend in Production ──────────────────────────────────────────────
 // This allows deploying both frontend and backend as a single Render Web Service
@@ -275,8 +504,15 @@ app.use((req, res) => {
 });
 
 // ── Start ─────────────────────────────────────────────────────────────────────
-app.listen(port, () => {
-  console.log(`[contact-server] Listening on http://localhost:${port}`);
-  console.log(`[contact-server] From   : ${resendFromEmail}`);
-  console.log(`[contact-server] Owner  : ${ownerEmail}`);
-});
+// In production on Vercel, the app is exported and run serverlessly.
+// Locally, we still want to listen on a port for dev mode.
+if (process.env.NODE_ENV !== 'production' && !process.env.VERCEL) {
+  app.listen(port, () => {
+    console.log(`[contact-server] Listening on http://localhost:${port}`);
+    console.log(`[contact-server] From   : ${resendFromEmail}`);
+    console.log(`[contact-server] Owner  : ${ownerEmail}`);
+    console.log(`[contact-server] Admin  : ${adminEmail}`);
+  });
+}
+
+export default app;

@@ -98,20 +98,16 @@ export function Hero() {
             className="mt-3 flex items-center gap-3 text-sm md:text-base text-fg-muted"
           >
             <span className="font-mono text-xs uppercase tracking-widest text-fg-subtle">I am</span>
-            <span className="relative h-6 overflow-hidden">
-              <AnimatePresence mode="wait">
+            <span className="relative h-6 flex items-center">
                 <motion.span
-                  key={text}
                   initial={{ y: '100%', opacity: 0 }}
                   animate={{ y: 0, opacity: 1 }}
-                  exit={{ y: '-100%', opacity: 0 }}
                   transition={{ duration: 0.5, ease: [0.83, 0, 0.17, 1] }}
                   className="inline-block font-display text-fg"
                 >
                   {text}
                   <span className="ml-0.5 inline-block w-[2px] h-[1em] align-middle bg-accent-cyan animate-pulse" />
                 </motion.span>
-              </AnimatePresence>
             </span>
           </motion.div>
 

@@ -97,6 +97,68 @@ export async function writeContent(data) {
   }
 }
 
+// ── Write Resume to GitHub API ───────────────────────────────────────────────
+
+export async function writeResumeFile(base64Content) {
+  const token = process.env.GITHUB_TOKEN;
+  const repoFullName = process.env.GITHUB_REPO;
+  const filePath = 'src/constants/KrishnaWadhwaResume.pdf'; 
+
+  // If no GitHub credentials, fall back to local filesystem (for local dev)
+  if (!token || !repoFullName) {
+    console.log('[data-store] GITHUB_TOKEN not found. Writing resume to local disk.');
+    const targetPath = path.join(__dirname, '../src/constants/KrishnaWadhwaResume.pdf');
+    fs.writeFileSync(targetPath, Buffer.from(base64Content, 'base64'));
+    return;
+  }
+
+  try {
+    const getUrl = `https://api.github.com/repos/${repoFullName}/contents/${filePath}`;
+    
+    // 1. Get current SHA
+    const getRes = await fetch(getUrl, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'User-Agent': 'Portfolio-Admin-Dashboard',
+        Accept: 'application/vnd.github.v3+json'
+      }
+    });
+
+    let sha;
+    if (getRes.ok) {
+      const fileInfo = await getRes.json();
+      sha = fileInfo.sha;
+    }
+
+    // 2. Put new content
+    const putRes = await fetch(getUrl, {
+      method: 'PUT',
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'User-Agent': 'Portfolio-Admin-Dashboard',
+        Accept: 'application/vnd.github.v3+json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        message: '🤖 Automated resume update via Admin Dashboard',
+        content: base64Content,
+        sha: sha // required to update existing files
+      })
+    });
+
+    if (!putRes.ok) {
+      const err = await putRes.text();
+      console.error('[data-store] GitHub API Error:', err);
+      throw new Error('GitHub API Error');
+    } else {
+      console.log('[data-store] ✅ Successfully pushed resume update to GitHub.');
+    }
+  } catch (error) {
+    console.error('[data-store] Failed to communicate with GitHub:', error.message);
+    throw error;
+  }
+}
+
 // ── Get a specific section ───────────────────────────────────────────────────
 
 export function getSection(section) {

@@ -27,6 +27,11 @@ export function SettingsAdmin() {
   const [pwLoading, setPwLoading] = useState(false);
   const [pwMsg, setPwMsg] = useState('');
 
+  // Resume upload
+  const [resumeFile, setResumeFile] = useState<File | null>(null);
+  const [resumeLoading, setResumeLoading] = useState(false);
+  const [resumeMsg, setResumeMsg] = useState('');
+
   useEffect(() => {
     api
       .get<{ site: SiteSettings }>('/admin/content', true)
@@ -77,6 +82,39 @@ export function SettingsAdmin() {
     }
   };
 
+  const handleResumeUpload = async () => {
+    if (!resumeFile) return;
+    setResumeLoading(true);
+    setResumeMsg('');
+    
+    try {
+      const reader = new FileReader();
+      reader.onload = async (e) => {
+        try {
+          const result = e.target?.result as string;
+          const base64Content = result.split(',')[1];
+          if (!base64Content) throw new Error('Failed to parse file content.');
+
+          const res = await api.post<{ message: string }>('/admin/resume', { content: base64Content }, true);
+          setResumeMsg(res.message);
+          setResumeFile(null);
+        } catch (err) {
+          setResumeMsg(err instanceof Error ? err.message : 'Upload failed');
+        } finally {
+          setResumeLoading(false);
+        }
+      };
+      reader.onerror = () => {
+        setResumeMsg('Failed to read file');
+        setResumeLoading(false);
+      };
+      reader.readAsDataURL(resumeFile);
+    } catch (err) {
+      setResumeMsg(err instanceof Error ? err.message : 'Upload failed');
+      setResumeLoading(false);
+    }
+  };
+
   if (loading) return <p className="text-neutral-500 text-sm">Loading…</p>;
   if (!site) return <p className="text-red-400 text-sm">{error || 'No data'}</p>;
 
@@ -106,6 +144,30 @@ export function SettingsAdmin() {
           className="mt-4 inline-flex items-center gap-1.5 rounded-md bg-white px-3 py-1.5 text-sm font-medium text-black hover:opacity-90 disabled:opacity-50"
         >
           <Save size={14} /> {saving ? 'Saving…' : 'Save Settings'}
+        </button>
+      </div>
+
+      {/* Resume Upload */}
+      <div className="border-t border-neutral-800/50 pt-8">
+        <h2 className="text-lg font-semibold mb-4">Update Resume (PDF)</h2>
+        <div className="space-y-3 max-w-sm">
+          <div>
+            <label className="block text-xs text-neutral-500 mb-1">Select Resume PDF</label>
+            <input
+              type="file"
+              accept=".pdf"
+              onChange={(e) => setResumeFile(e.target.files?.[0] || null)}
+              className="w-full rounded-md border border-neutral-800 bg-neutral-900 px-3 py-2 text-sm text-neutral-400 outline-none file:mr-4 file:py-1 file:px-3 file:rounded-full file:border-0 file:text-xs file:bg-neutral-800 file:text-white hover:file:bg-neutral-700"
+            />
+          </div>
+        </div>
+        {resumeMsg && <p className="text-sm text-neutral-400 mt-2">{resumeMsg}</p>}
+        <button
+          onClick={handleResumeUpload}
+          disabled={!resumeFile || resumeLoading}
+          className="mt-4 rounded-md border border-neutral-800 px-3 py-1.5 text-sm text-neutral-400 hover:text-white disabled:opacity-50"
+        >
+          {resumeLoading ? 'Uploading…' : 'Upload Resume'}
         </button>
       </div>
 

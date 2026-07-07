@@ -12,6 +12,7 @@ import {
   updateItem,
   deleteItem,
   initializeIfEmpty,
+  writeResumeFile,
 } from './data-store.js';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -68,7 +69,7 @@ app.use((req, res, next) => {
 });
 
 // ── Body Parser ──────────────────────────────────────────────────────────────
-app.use(express.json({ limit: '1mb' }));
+app.use(express.json({ limit: '10mb' }));
 
 // ── API-Wide Rate Limiter ────────────────────────────────────────────────────
 app.use('/api', apiLimiter);
@@ -464,6 +465,22 @@ app.delete('/api/admin/content/:section/:id', authenticate, authorize('admin'), 
   }
 
   return res.json({ message: 'Item deleted.', data: removed });
+});
+
+// ── POST /api/admin/resume ────────────────────────────────────────────────────
+app.post('/api/admin/resume', authenticate, authorize('admin'), async (req, res) => {
+  const { content } = req.body ?? {};
+  
+  if (!content) {
+    return res.status(400).json({ message: 'No file content provided.' });
+  }
+
+  try {
+    await writeResumeFile(content);
+    return res.json({ message: 'Resume uploaded successfully. Vercel will rebuild the site in a minute.' });
+  } catch (error) {
+    return res.status(500).json({ message: 'Failed to upload resume.' });
+  }
 });
 
 // ── POST /api/admin/change-password ───────────────────────────────────────────

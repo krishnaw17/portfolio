@@ -25,7 +25,7 @@ export function Hero() {
 
 
       {/* 3D Canvas */}
-      <div className="absolute inset-0 z-0">
+      <div className="absolute inset-0 z-0" aria-hidden="true">
         {mounted && (
           <Suspense fallback={null}>
             <HeroCanvas />

@@ -68,6 +68,7 @@ export function Navbar() {
           >
             <a
               href="#hero"
+              aria-label="Home"
               className="flex items-center gap-2 pl-2 pr-3 text-sm font-display font-medium tracking-tight"
             >
               <span className="grid h-7 w-7 place-items-center rounded-full bg-fg text-bg text-[11px] font-bold">

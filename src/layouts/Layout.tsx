@@ -22,12 +22,12 @@ export function Layout({ children }: LayoutProps) {
       <CommandHint />
       
       {/* Global Backgrounds */}
-      <div className="pointer-events-none fixed inset-0 z-0 opacity-40">
+      <div className="pointer-events-none fixed inset-0 z-0 opacity-40" aria-hidden="true">
         <StarfieldCanvas />
       </div>
-      <div className="pointer-events-none fixed inset-0 z-0 grid-bg opacity-[0.18] animate-grid" />
-      <div className="pointer-events-none fixed inset-0 z-0 bg-radial-fade opacity-40" />
-      <div className="pointer-events-none fixed inset-0 z-0 bg-[linear-gradient(180deg,rgba(5,5,5,0.36)_0%,rgba(5,5,5,0.18)_30%,rgba(5,5,5,0.62)_100%)]" />
+      <div className="pointer-events-none fixed inset-0 z-0 grid-bg opacity-[0.18] animate-grid" aria-hidden="true" />
+      <div className="pointer-events-none fixed inset-0 z-0 bg-radial-fade opacity-40" aria-hidden="true" />
+      <div className="pointer-events-none fixed inset-0 z-0 bg-[linear-gradient(180deg,rgba(5,5,5,0.36)_0%,rgba(5,5,5,0.18)_30%,rgba(5,5,5,0.62)_100%)]" aria-hidden="true" />
 
       <main id="main" className="relative z-10 noise-overlay">
         {children}

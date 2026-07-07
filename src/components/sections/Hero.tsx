@@ -1,5 +1,5 @@
 import { Suspense, useEffect, useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { ArrowDown, ArrowUpRight, Sparkles, Star } from 'lucide-react';
 import { HeroCanvas } from '@/components/three/HeroScene';
 import { MagneticButton } from '@/components/ui/MagneticButton';

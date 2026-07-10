@@ -3,6 +3,7 @@ import express from 'express';
 import path from 'path';
 import helmet from 'helmet';
 import { fileURLToPath } from 'url';
+import nodemailer from 'nodemailer';
 import { authenticate, authorize, generateToken, comparePassword, hashPassword } from './auth.js';
 import { contactLimiter, authLimiter, apiLimiter } from './rate-limiter.js';
 import {
@@ -21,20 +22,19 @@ const __dirname = path.dirname(__filename);
 const app = express();
 const port = Number(process.env.CONTACT_PORT || 3001);
 
-const ownerEmail   = process.env.CONTACT_TO_EMAIL   || 'krishnawadhwa2@gmail.com';
-const resendApiKey = process.env.RESEND_API_KEY;
+const ownerEmail = process.env.CONTACT_TO_EMAIL || 'krishnawadhwa2@gmail.com';
 
-// Always use onboarding@resend.dev — the pre-verified Resend sandbox sender.
-// If you own a custom domain, add RESEND_FROM_EMAIL=you@yourdomain.com to .env.
-const resendFromEmail =
-  process.env.RESEND_FROM_EMAIL || 'Portfolio <onboarding@resend.dev>';
+const emailUser = process.env.EMAIL_USER;
+const emailPass = process.env.EMAIL_PASS;
+const emailFrom = process.env.EMAIL_FROM || emailUser || 'Portfolio Contact <noreply@yourdomain.com>';
 
 // Admin credentials from env
 const adminEmail = process.env.ADMIN_EMAIL || 'krishnawadhwa2@gmail.com';
 const adminPasswordHash = process.env.ADMIN_PASSWORD_HASH || '';
 
-if (!resendApiKey) {
-  console.warn('[contact-server] ⚠️  RESEND_API_KEY is not set in .env');
+if (!emailUser || !emailPass) {
+  console.warn('[contact-server] ⚠️  EMAIL_USER or EMAIL_PASS is not set in .env');
+  console.warn('[contact-server] ⚠️  Nodemailer will not be able to send emails.');
 }
 
 if (!adminPasswordHash) {
@@ -101,32 +101,38 @@ initializeIfEmpty({
   certifications: [],
 }).catch(console.error);
 
-// ── Resend helper ─────────────────────────────────────────────────────────────
-async function sendResendEmail({ to, subject, html, text, replyTo }) {
-  const body = { from: resendFromEmail, to, subject, html, text };
-  if (replyTo) body.reply_to = replyTo;
+// ── Nodemailer helper ─────────────────────────────────────────────────────────────
+const transporter = nodemailer.createTransport({
+  host: process.env.SMTP_HOST || 'smtp.gmail.com',
+  port: Number(process.env.SMTP_PORT) || 465,
+  secure: process.env.SMTP_SECURE !== 'false', // true for 465, false for other ports
+  auth: {
+    user: emailUser,
+    pass: emailPass,
+  },
+});
 
-  const response = await fetch('https://api.resend.com/emails', {
-    method:  'POST',
-    headers: {
-      Authorization:  `Bearer ${resendApiKey}`,
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(body),
-  });
-
-  if (!response.ok) {
-    const err = await response.text();
-    throw new Error(`Resend ${response.status}: ${err}`);
+async function sendEmail({ to, subject, html, text, replyTo }) {
+  const mailOptions = {
+    from: emailFrom,
+    to,
+    subject,
+    html,
+    text,
+  };
+  
+  if (replyTo) {
+    mailOptions.replyTo = replyTo;
   }
-  return response.json();
+
+  return await transporter.sendMail(mailOptions);
 }
 
 // ── HTML: notification to portfolio owner ─────────────────────────────────────
 function ownerEmailHtml({ name, email, message }) {
   const safe = String(message)
-    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
-    .replace(/\n/g,'<br/>');
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    .replace(/\n/g, '<br/>');
   return `<!DOCTYPE html>
 <html lang="en">
 <head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/></head>
@@ -285,7 +291,7 @@ app.post('/api/contact', contactLimiter, async (req, res) => {
     return res.status(400).json({ message: 'Input exceeds maximum length.' });
   }
 
-  if (!resendApiKey) {
+  if (!emailUser || !emailPass) {
     return res.status(500).json({ message: 'Email service is not configured.' });
   }
 
@@ -293,12 +299,12 @@ app.post('/api/contact', contactLimiter, async (req, res) => {
 
   // 1️⃣  Notify owner
   try {
-    await sendResendEmail({
-      to:      ownerEmail,
+    await sendEmail({
+      to: ownerEmail,
       replyTo: email,
       subject: `📬 New message from ${name} via Portfolio`,
-      html:    ownerEmailHtml({ name, email, message: safeMessage }),
-      text:    `New portfolio message\n\nName: ${name}\nEmail: ${email}\n\n${safeMessage}`,
+      html: ownerEmailHtml({ name, email, message: safeMessage }),
+      text: `New portfolio message\n\nName: ${name}\nEmail: ${email}\n\n${safeMessage}`,
     });
     console.log(`[contact-server] ✅ Owner notified about message from ${name}`);
   } catch (err) {
@@ -306,13 +312,13 @@ app.post('/api/contact', contactLimiter, async (req, res) => {
     return res.status(500).json({ message: 'Failed to deliver your message. Please try again.' });
   }
 
-  // 2️⃣  Auto-reply to sender (best-effort — requires verified domain on Resend)
+  // 2️⃣  Auto-reply to sender
   try {
-    await sendResendEmail({
-      to:      email,
+    await sendEmail({
+      to: email,
       subject: `👋 Thanks for reaching out, ${name}!`,
-      html:    autoReplyHtml({ name }),
-      text:    [
+      html: autoReplyHtml({ name }),
+      text: [
         `Hello ${name},`,
         '',
         'Thank you for contacting me.',
@@ -331,7 +337,7 @@ app.post('/api/contact', contactLimiter, async (req, res) => {
   } catch (err) {
     // Auto-reply failure is non-fatal — owner was already notified.
     console.warn(`[contact-server] ⚠️  Auto-reply to ${email} failed (${err.message})`);
-    console.warn('[contact-server]    → Add a verified custom domain in Resend to enable auto-replies.');
+    console.warn('[contact-server]    → Check your SMTP configuration for auto-replies.');
   }
 
   return res.status(200).json({ message: 'Message sent successfully.' });
@@ -349,7 +355,7 @@ app.get('/api/content', (_req, res) => {
 });
 
 // ── Health check ──────────────────────────────────────────────────────────────
-app.get('/api/health', (_req, res) => res.json({ status: 'ok', from: resendFromEmail }));
+app.get('/api/health', (_req, res) => res.json({ status: 'ok', from: emailFrom }));
 
 // ══════════════════════════════════════════════════════════════════════════════
 // AUTH ROUTES
@@ -470,7 +476,7 @@ app.delete('/api/admin/content/:section/:id', authenticate, authorize('admin'), 
 // ── POST /api/admin/resume ────────────────────────────────────────────────────
 app.post('/api/admin/resume', authenticate, authorize('admin'), async (req, res) => {
   const { content } = req.body ?? {};
-  
+
   if (!content) {
     return res.status(400).json({ message: 'No file content provided.' });
   }
@@ -526,7 +532,7 @@ app.use((req, res) => {
 if (process.env.NODE_ENV !== 'production' && !process.env.VERCEL) {
   app.listen(port, () => {
     console.log(`[contact-server] Listening on http://localhost:${port}`);
-    console.log(`[contact-server] From   : ${resendFromEmail}`);
+    console.log(`[contact-server] From   : ${emailFrom}`);
     console.log(`[contact-server] Owner  : ${ownerEmail}`);
     console.log(`[contact-server] Admin  : ${adminEmail}`);
   });

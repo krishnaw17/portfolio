@@ -232,6 +232,34 @@
       "impact": "Improved Lighthouse Performance score by 30 points while reducing average page load time by nearly 2 seconds.",
       "year": 2024,
       "featured": true
+    },
+    {
+      "id": "proj-1795020983697",
+      "title": "Shri Gyan Tyres",
+      "description": "A modern, responsive business website for Shri Gyan Tyres, showcasing premium tyre brands, product categories, and automotive services with a seamless customer experience.",
+      "longDescription": "Designed and developed a modern, responsive business website for Shri Gyan Tyres, a multi-brand tyre dealership. The platform provides a comprehensive digital presence through interactive product showcases, leading tyre brands, automotive services, and business information. Integrated customer enquiry functionality, WhatsApp connectivity, and Google Maps navigation to simplify customer interactions and improve accessibility. Focused on clean UI/UX, responsive design, performance, and SEO to deliver a seamless experience across devices.",
+      "image": "https://drive.google.com/file/d/15_eFgrj_e65wrgtxJA-iotIA-7IBo6IF/view?usp=drive_link",
+      "tags": [
+        "React.js",
+        "Next.js",
+        "JavaScript",
+        "Tailwind CSS",
+        "Responsive Design",
+        "UI/UX",
+        "SEO",
+        "Web Development",
+        "Business Website",
+        "Vercel"
+      ],
+      "category": "web",
+      "github": "https://github.com/krishnaw17/shri-gyan-tyres",
+      "live": "https://shri-gyan-tyres.vercel.app/",
+      "metrics": [],
+      "problem": "The business lacked a comprehensive digital platform to showcase its tyre brands, product categories, and automotive services. Customers had limited access to business information, product details, and convenient enquiry channels online. The goal was to bridge this digital gap by creating a centralized, responsive platform that strengthens online visibility, simplifies product discovery, and improves customer communication.",
+      "solution": "Developed a modern, responsive business website with an intuitive user interface to showcase tyre products, leading brands, and automotive services. Implemented dedicated product categories, brand showcases, service sections, customer enquiry functionality, WhatsApp integration, and Google Maps navigation. Focused on responsive layouts, user-friendly navigation, and SEO optimization to ensure accessibility and a consistent experience across devices.",
+      "impact": "Established a professional digital presence for Shri Gyan Tyres, making product and service information easily accessible to customers. Simplified customer enquiries and business communication through integrated contact channels. Improved online brand visibility, streamlined product discovery, and created a scalable digital platform to support future business growth.",
+      "year": 2026,
+      "featured": false
     }
   ],
   "experience": [
@@ -381,6 +409,6 @@
   ],
   "_meta": {
     "createdAt": "2026-07-07T05:00:00.000Z",
-    "updatedAt": "2026-11-18T16:54:47.615Z"
+    "updatedAt": "2026-11-18T16:59:46.831Z"
   }
 }

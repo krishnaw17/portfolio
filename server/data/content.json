@@ -194,7 +194,7 @@
       "solution": "Built a responsive web application providing event information, schedules, and announcements in a single platform.",
       "impact": "Successfully served thousands of attendees during the college cultural festival.",
       "year": 2025,
-      "featured": true
+      "featured": false
     },
     {
       "id": "youtube-clone",
@@ -376,6 +376,6 @@
   ],
   "_meta": {
     "createdAt": "2026-07-07T05:00:00.000Z",
-    "updatedAt": "2026-11-18T12:15:21.836Z"
+    "updatedAt": "2026-11-18T12:20:00.010Z"
   }
 }

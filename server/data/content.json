@@ -194,7 +194,7 @@
       "solution": "Built a responsive web application providing event information, schedules, and announcements in a single platform.",
       "impact": "Successfully served thousands of attendees during the college cultural festival.",
       "year": 2025,
-      "featured": false
+      "featured": true
     },
     {
       "id": "youtube-clone",
@@ -231,34 +231,6 @@
       "solution": "Created a feature-rich YouTube clone with optimized rendering, Redux state management, and responsive UI using Tailwind CSS.",
       "impact": "Improved Lighthouse Performance score by 30 points while reducing average page load time by nearly 2 seconds.",
       "year": 2024,
-      "featured": true
-    },
-    {
-      "id": "proj-1795004403809",
-      "title": "Shri Gyan Tyres",
-      "description": "Delivered a business website featuring an interactive 3D tyre visualizer, dynamic product catalogue, and vehicle-based filtering for improved product discovery.",
-      "longDescription": "Designed and developed a modern, responsive business website for Shri Gyan Tyres, a multi-brand tyre dealership, to establish a strong digital presence and improve customer engagement. The platform showcases a wide range of tyre brands, product categories, automotive services, and business information through an intuitive and user-friendly interface. Integrated enquiry functionality, WhatsApp connectivity, and location-based navigation to make it easier for customers to explore products and connect with the business.",
-      "image": "https://drive.google.com/file/d/15_eFgrj_e65wrgtxJA-iotIA-7IBo6lF/view?usp=drive_link",
-      "tags": [
-        "React.js",
-        "Next.js",
-        "JavaScript",
-        "Tailwind CSS",
-        "Responsive Design",
-        "UI/UX",
-        "SEO",
-        "Web Development",
-        "Business Website",
-        "Vercel"
-      ],
-      "category": "web",
-      "github": "https://github.com/krishnaw17/shri-gyan-tyres.git",
-      "live": "https://shri-gyan-tyres.vercel.app/",
-      "metrics": [],
-      "problem": "The business lacked a comprehensive digital platform to showcase its tyre brands, product categories, and automotive services. Customers had limited access to business information, product details, and convenient enquiry channels online. The goal was to bridge this digital gap by creating a centralized, responsive platform that strengthens online visibility, simplifies product discovery, and improves customer communication.",
-      "solution": "Developed a modern, responsive website using React.js and Next.js with a clean UI/UX to showcase tyre products, leading brands, and automotive services. Implemented dedicated product categories, brand showcases, service sections, customer enquiry forms, WhatsApp integration, and Google Maps navigation. Focused on responsive design, SEO optimization, and seamless user experience across devices.",
-      "impact": "Established a professional digital presence for Shri Gyan Tyres, making product and service information easily accessible to customers. Simplified customer enquiries and business communication through integrated contact channels. Improved online brand visibility, streamlined product discovery, and created a scalable platform for future business growth.",
-      "year": 2026,
       "featured": true
     }
   ],
@@ -310,8 +282,8 @@
       ]
     },
     {
-      "id": "exp-1795003519755",
-      "company": "Shri Gyan Tyres",
+      "id": "exp-1795019610210",
+      "company": "Playtown Studios",
       "role": "Full Stack Developer",
       "period": "June 2026 - July 2026",
       "location": "Jaipur",
@@ -335,25 +307,6 @@
         "JWT",
         "Nodemailer"
       ]
-    },
-    {
-      "id": "exp-1795003724136",
-      "company": "SKIT Jaipur",
-      "role": "Lead Organizer • ICI Fest'26",
-      "period": "October 2026",
-      "location": "Jaipur",
-      "description": "Served as Lead Organizer for SKIT ICI Fest '26, taking responsibility for planning, coordinating, and executing the college fest. Led cross-functional student teams, managed event operations, coordinated with volunteers and stakeholders, and ensured smooth execution of activities while delivering an engaging experience for participants and attendees.",
-      "achievements": [
-        "Led end-to-end planning and execution of SKIT ICI Fest '26.",
-        "Coordinated cross-functional teams and volunteers to ensure smooth event operations.",
-        "Managed event logistics, scheduling, and on-ground coordination.",
-        "Collaborated with faculty, sponsors, and student committees for seamless execution.",
-        "Handled real-time challenges and operational decisions under tight deadlines.",
-        "Contributed to creating an engaging and well-organized experience for participants."
-      ],
-      "technologies": [
-        "Leadership | Team Management | Event Planning | Stakeholder Coordination | Problem-Solving | Operations Management"
-      ]
     }
   ],
   "education": [
@@ -363,7 +316,7 @@
       "degree": "Bachelor of Technology (B.Tech)",
       "field": "Computer Science & Engineering",
       "period": "Sept 2023 — May 2027",
-      "description": "Currently pursuing B.Tech in Computer Science & Engineering with a CGPA of 8.53/10. Active in full-stack development, AI-powered applications, hackathons, and technical leadership."
+      "description": "Currently pursuing B.Tech in Computer Science & Engineering with a CGPA of 8.46/10. Active in full-stack development, AI-powered applications, hackathons, and technical leadership."
     },
     {
       "id": "sps",
@@ -404,6 +357,6 @@
   ],
   "_meta": {
     "createdAt": "2026-07-07T05:00:00.000Z",
-    "updatedAt": "2026-11-18T12:25:59.151Z"
+    "updatedAt": "2026-11-18T16:35:07.967Z"
   }
 }

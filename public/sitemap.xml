@@ -1,27 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://krishnawadhwa.vercel.app/</loc>
+    <loc>https://krishna-wadhwa.vercel.app/</loc>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://krishnawadhwa.vercel.app/#work</loc>
+    <loc>https://krishna-wadhwa.vercel.app/#work</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://krishnawadhwa.vercel.app/#experience</loc>
+    <loc>https://krishna-wadhwa.vercel.app/#experience</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://krishnawadhwa.vercel.app/#skills</loc>
+    <loc>https://krishna-wadhwa.vercel.app/#skills</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://krishnawadhwa.vercel.app/#contact</loc>
+    <loc>https://krishna-wadhwa.vercel.app/#contact</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>

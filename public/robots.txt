@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://krishnawadhwa.vercel.app/sitemap.xml
+Sitemap: https://krishna-wadhwa.vercel.app/sitemap.xml

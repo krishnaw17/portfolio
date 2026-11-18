@@ -314,9 +314,18 @@
       "role": "Lead Organizer • ICI Fest'26",
       "period": "October 2026",
       "location": "Jaipur",
-      "description": "",
-      "achievements": [],
-      "technologies": []
+      "description": "Served as Lead Organizer for SKIT ICI Fest '26, taking responsibility for planning, coordinating, and executing the college fest. Led cross-functional student teams, managed event operations, coordinated with volunteers and stakeholders, and ensured smooth execution of activities while delivering an engaging experience for participants and attendees.",
+      "achievements": [
+        "Led end-to-end planning and execution of SKIT ICI Fest '26.",
+        "Coordinated cross-functional teams and volunteers to ensure smooth event operations.",
+        "Managed event logistics, scheduling, and on-ground coordination.",
+        "Collaborated with faculty, sponsors, and student committees for seamless execution.",
+        "Handled real-time challenges and operational decisions under tight deadlines.",
+        "Contributed to creating an engaging and well-organized experience for participants."
+      ],
+      "technologies": [
+        "Leadership | Team Management | Event Planning | Stakeholder Coordination | Problem-Solving | Operations Management"
+      ]
     }
   ],
   "education": [
@@ -367,6 +376,6 @@
   ],
   "_meta": {
     "createdAt": "2026-07-07T05:00:00.000Z",
-    "updatedAt": "2026-11-18T12:12:37.723Z"
+    "updatedAt": "2026-11-18T12:13:51.594Z"
   }
 }

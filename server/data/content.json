@@ -19,26 +19,106 @@
     "Backend Engineer"
   ],
   "skills": [
-    { "name": "JavaScript", "category": "languages", "level": 90 },
-    { "name": "C", "category": "languages", "level": 80 },
-    { "name": "C++", "category": "languages", "level": 85 },
-    { "name": "React", "category": "frontend", "level": 98 },
-    { "name": "TypeScript", "category": "frontend", "level": 96 },
-    { "name": "Next.js", "category": "frontend", "level": 95 },
-    { "name": "Three.js / R3F", "category": "frontend", "level": 88 },
-    { "name": "Framer Motion", "category": "frontend", "level": 92 },
-    { "name": "Tailwind CSS", "category": "frontend", "level": 96 },
-    { "name": "Node.js", "category": "backend", "level": 94 },
-    { "name": "Express.js", "category": "backend", "level": 90 },
-    { "name": "Vercel", "category": "cloud", "level": 94 },
-    { "name": "Render", "category": "cloud", "level": 86 },
-    { "name": "Claude", "category": "ai", "level": 92 },
-    { "name": "ChatGPT", "category": "ai", "level": 90 },
-    { "name": "SQL", "category": "databases", "level": 94 },
-    { "name": "Redis", "category": "databases", "level": 90 },
-    { "name": "NoSQL", "category": "databases", "level": 82 },
-    { "name": "Git", "category": "tools", "level": 90 },
-    { "name": "Postman", "category": "tools", "level": 94 }
+    {
+      "name": "JavaScript",
+      "category": "languages",
+      "level": 90
+    },
+    {
+      "name": "C",
+      "category": "languages",
+      "level": 80
+    },
+    {
+      "name": "C++",
+      "category": "languages",
+      "level": 85
+    },
+    {
+      "name": "React",
+      "category": "frontend",
+      "level": 98
+    },
+    {
+      "name": "TypeScript",
+      "category": "frontend",
+      "level": 96
+    },
+    {
+      "name": "Next.js",
+      "category": "frontend",
+      "level": 95
+    },
+    {
+      "name": "Three.js / R3F",
+      "category": "frontend",
+      "level": 88
+    },
+    {
+      "name": "Framer Motion",
+      "category": "frontend",
+      "level": 92
+    },
+    {
+      "name": "Tailwind CSS",
+      "category": "frontend",
+      "level": 96
+    },
+    {
+      "name": "Node.js",
+      "category": "backend",
+      "level": 94
+    },
+    {
+      "name": "Express.js",
+      "category": "backend",
+      "level": 90
+    },
+    {
+      "name": "Vercel",
+      "category": "cloud",
+      "level": 94
+    },
+    {
+      "name": "Render",
+      "category": "cloud",
+      "level": 86
+    },
+    {
+      "name": "Claude",
+      "category": "ai",
+      "level": 92
+    },
+    {
+      "name": "ChatGPT",
+      "category": "ai",
+      "level": 90
+    },
+    {
+      "name": "SQL",
+      "category": "databases",
+      "level": 94
+    },
+    {
+      "name": "Redis",
+      "category": "databases",
+      "level": 90
+    },
+    {
+      "name": "NoSQL",
+      "category": "databases",
+      "level": 82
+    },
+    {
+      "name": "Git",
+      "category": "tools",
+      "level": 90
+    },
+    {
+      "name": "Postman",
+      "category": "tools",
+      "level": 94
+    }
   ],
   "projects": [
     {
@@ -47,14 +127,33 @@
       "description": "An AI-powered resume screening platform that evaluates resumes against job descriptions while removing bias through automated candidate data sanitization.",
       "longDescription": "HireBlind is a full-stack AI recruitment platform built using Next.js, React.js, Node.js, MongoDB, JWT, and Gemini 2.0 Flash. The platform automatically extracts and sanitizes candidate information using Regex and LLM-based parsing, evaluates resumes against job descriptions, generates explainable AI scores, provides recruiter analytics, and implements secure JWT authentication with Role-Based Access Control (RBAC).",
       "image": "/projects/hireblind.png",
-      "tags": ["Next.js", "React", "Node.js", "MongoDB", "JWT", "Gemini AI", "Tailwind CSS", "Vercel", "Render"],
+      "tags": [
+        "Next.js",
+        "React",
+        "Node.js",
+        "MongoDB",
+        "JWT",
+        "Gemini AI",
+        "Tailwind CSS",
+        "Vercel",
+        "Render"
+      ],
       "category": "ai",
       "github": "https://github.com/krishnaw17/backend_hireblind",
       "live": "https://frontend-hireblind.vercel.app/",
       "metrics": [
-        { "label": "Candidate Fields Parsed", "value": "12+" },
-        { "label": "Authentication", "value": "JWT + RBAC" },
-        { "label": "AI Model", "value": "Gemini 2.0 Flash" }
+        {
+          "label": "Candidate Fields Parsed",
+          "value": "12+"
+        },
+        {
+          "label": "Authentication",
+          "value": "JWT + RBAC"
+        },
+        {
+          "label": "AI Model",
+          "value": "Gemini 2.0 Flash"
+        }
       ],
       "problem": "Recruiters spend significant time manually reviewing resumes, resulting in inconsistent evaluations and unconscious hiring bias.",
       "solution": "Built an automated AI-powered resume processing pipeline using Regex, LLM-based parsing, Gemini AI scoring, MongoDB, and secure RBAC authentication to streamline recruitment.",
@@ -68,14 +167,28 @@
       "description": "Official website for SKIT Jaipur's annual cultural festival serving 4,000+ attendees.",
       "longDescription": "Developed and deployed the official Pravah 2025 website using Next.js, React.js, and Tailwind CSS. The platform centralized event schedules, announcements, registrations, and responsive navigation while ensuring smooth performance across devices.",
       "image": "/projects/pravah.png",
-      "tags": ["Next.js", "React.js", "Tailwind CSS", "Vercel"],
+      "tags": [
+        "Next.js",
+        "React.js",
+        "Tailwind CSS",
+        "Vercel"
+      ],
       "category": "web",
       "github": "https://github.com/krishnaw17/pravah2025.git",
       "live": "https://pravah2025-two.vercel.app/",
       "metrics": [
-        { "label": "Festival Audience", "value": "4,000+" },
-        { "label": "Performance", "value": "Responsive" },
-        { "label": "Deployment", "value": "Vercel" }
+        {
+          "label": "Festival Audience",
+          "value": "4,000+"
+        },
+        {
+          "label": "Performance",
+          "value": "Responsive"
+        },
+        {
+          "label": "Deployment",
+          "value": "Vercel"
+        }
       ],
       "problem": "Festival participants lacked a centralized platform for schedules, announcements, and event information.",
       "solution": "Built a responsive web application providing event information, schedules, and announcements in a single platform.",
@@ -89,14 +202,30 @@
       "description": "A responsive YouTube clone with real-time video search and playback powered by RapidAPI.",
       "longDescription": "Developed a modern YouTube-inspired application using React.js, Redux Toolkit, Tailwind CSS, and RapidAPI. Implemented routed navigation, persistent search, dynamic video rendering, category filtering, and optimized performance.",
       "image": "/projects/youtube.png",
-      "tags": ["React.js", "Redux Toolkit", "Tailwind CSS", "RapidAPI", "JavaScript", "Vercel"],
+      "tags": [
+        "React.js",
+        "Redux Toolkit",
+        "Tailwind CSS",
+        "RapidAPI",
+        "JavaScript",
+        "Vercel"
+      ],
       "category": "web",
       "github": "https://github.com/krishnaw17/yt_clone.git",
       "live": "https://yt-clone-alpha.vercel.app/",
       "metrics": [
-        { "label": "Performance", "value": "+30 Lighthouse" },
-        { "label": "Load Time", "value": "-2 Seconds" },
-        { "label": "State Management", "value": "Redux Toolkit" }
+        {
+          "label": "Performance",
+          "value": "+30 Lighthouse"
+        },
+        {
+          "label": "Load Time",
+          "value": "-2 Seconds"
+        },
+        {
+          "label": "State Management",
+          "value": "Redux Toolkit"
+        }
       ],
       "problem": "Wanted to build a scalable frontend application while learning API integration, routing, and state management.",
       "solution": "Created a feature-rich YouTube clone with optimized rendering, Redux state management, and responsive UI using Tailwind CSS.",
@@ -120,7 +249,15 @@
         "Improved Lighthouse Performance score by 30 points and reduced average page load time by nearly 2 seconds.",
         "Collaborated with senior developers to implement scalable frontend architecture and reusable components."
       ],
-      "technologies": ["React.js", "Redux Toolkit", "JavaScript", "Tailwind CSS", "RapidAPI", "Git", "GitHub"]
+      "technologies": [
+        "React.js",
+        "Redux Toolkit",
+        "JavaScript",
+        "Tailwind CSS",
+        "RapidAPI",
+        "Git",
+        "GitHub"
+      ]
     },
     {
       "id": "innovicion",
@@ -136,7 +273,34 @@
         "Worked with sponsors, mentors, judges, and organizing committees.",
         "Established InnovICIon as a flagship annual technical event."
       ],
-      "technologies": ["Leadership", "Project Management", "Event Planning", "Team Coordination", "Public Relations"]
+      "technologies": [
+        "Leadership",
+        "Project Management",
+        "Event Planning",
+        "Team Coordination",
+        "Public Relations"
+      ]
+    },
+    {
+      "id": "exp-1795003519755",
+      "company": "Shri Gyan Tyres",
+      "role": "Full Stack Developer",
+      "period": "45 days",
+      "location": "Jaipur",
+      "description": "◦ Delivered a business website featuring an interactive 3D tyre visualizer, dynamic product catalogue, and vehicle-based filtering for improved product discovery.",
+      "achievements": [
+        "Integrated online service bookings, automated email notifications, and a secure JWT-protected Admin Dashboard for managing products, bookings, and customer enquiries."
+      ],
+      "technologies": [
+        "Next.js",
+        "TypeScript",
+        "Tailwind CSS",
+        "Framer Motion",
+        "PostgreSQL",
+        "Prisma",
+        "JWT",
+        "Nodemailer"
+      ]
     }
   ],
   "education": [
@@ -187,6 +351,6 @@
   ],
   "_meta": {
     "createdAt": "2026-07-07T05:00:00.000Z",
-    "updatedAt": "2026-07-07T05:00:00.000Z"
+    "updatedAt": "2026-11-18T12:07:03.734Z"
   }
 }

@@ -280,6 +280,33 @@
         "Team Coordination",
         "Public Relations"
       ]
+    },
+    {
+      "id": "exp-1795020664376",
+      "company": "Playtown Studios",
+      "role": "Full Stack Developer",
+      "period": "June 2026- July 2026",
+      "location": "Jaipur",
+      "description": "Designed and developed a modern, responsive business website for Shri Gyan Tyres, a multi-brand tyre dealership established in 2002. Built a comprehensive digital platform featuring product categories, brand showcases, workshop services, customer testimonials, business information, and enquiry functionality to strengthen the brand's online presence and customer engagement.",
+      "achievements": [
+        "Developed a fully responsive website with an intuitive UI/UX and modern design.",
+        "Implemented dynamic product categories covering car, bike, truck, tractor and OTR tyres.",
+        "Integrated 8+ leading tyre brand showcases, including MRF, CEAT, BKT, Yokohama and Goodyear.",
+        "Built dedicated service sections for 3D wheel alignment, wheel balancing, nitrogen inflation and puncture repair.",
+        "Implemented customer enquiry forms, WhatsApp integration and Google Maps navigation.",
+        "Optimized website performance, accessibility and SEO for an improved user experience.",
+        "Deployed the production website using Vercel."
+      ],
+      "technologies": [
+        "Next.js",
+        "TypeScript",
+        "Tailwind CSS",
+        "Framer Motion",
+        "PostgreSQL",
+        "Prisma",
+        "JWT",
+        "Nodemailer"
+      ]
     }
   ],
   "education": [
@@ -330,6 +357,6 @@
   ],
   "_meta": {
     "createdAt": "2026-07-07T05:00:00.000Z",
-    "updatedAt": "2026-11-18T16:44:54.662Z"
+    "updatedAt": "2026-11-18T16:52:38.291Z"
   }
 }

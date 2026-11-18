@@ -301,6 +301,16 @@
         "JWT",
         "Nodemailer"
       ]
+    },
+    {
+      "id": "exp-1795003724136",
+      "company": "SKIT Jaipur",
+      "role": "Lead Organizer • ICI Fest'26",
+      "period": "October 2026",
+      "location": "Jaipur",
+      "description": "",
+      "achievements": [],
+      "technologies": []
     }
   ],
   "education": [
@@ -351,6 +361,6 @@
   ],
   "_meta": {
     "createdAt": "2026-07-07T05:00:00.000Z",
-    "updatedAt": "2026-11-18T12:07:48.601Z"
+    "updatedAt": "2026-11-18T12:09:36.717Z"
   }
 }

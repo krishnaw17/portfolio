@@ -280,20 +280,6 @@
         "Team Coordination",
         "Public Relations"
       ]
-    },
-    {
-      "id": "exp-1795020225145",
-      "company": "Shri Gyan Tyre",
-      "role": "ksnfk",
-      "period": "jan 2026",
-      "location": "dmak",
-      "description": "mfbasfj",
-      "achievements": [
-        "ajfbjaf"
-      ],
-      "technologies": [
-        "ajnfvja"
-      ]
     }
   ],
   "education": [
@@ -344,6 +330,6 @@
   ],
   "_meta": {
     "createdAt": "2026-07-07T05:00:00.000Z",
-    "updatedAt": "2026-11-18T16:44:11.450Z"
+    "updatedAt": "2026-11-18T16:44:54.662Z"
   }
 }

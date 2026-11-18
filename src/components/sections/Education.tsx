@@ -4,8 +4,10 @@ import { EDUCATION, CERTIFICATIONS } from '@/constants/content';
 import { TextReveal } from '@/components/ui/TextReveal';
 import { useInView } from '@/hooks/useInView';
 import { useUI } from '@/store/ui';
+import { useContent } from '@/hooks/useContent';
+import type { Education as EducationType, Certification } from '@/types';
 
-function EduCard({ edu, i }: { edu: (typeof EDUCATION)[number]; i: number }) {
+function EduCard({ edu, i }: { edu: EducationType; i: number }) {
   const { ref, inView } = useInView<HTMLDivElement>({ threshold: 0.2, once: true });
   const { setCursor } = useUI();
   return (
@@ -33,7 +35,7 @@ function EduCard({ edu, i }: { edu: (typeof EDUCATION)[number]; i: number }) {
   );
 }
 
-function CertCard({ cert, i }: { cert: (typeof CERTIFICATIONS)[number]; i: number }) {
+function CertCard({ cert, i }: { cert: Certification; i: number }) {
   const { ref, inView } = useInView<HTMLDivElement>({ threshold: 0.2, once: true });
   const { setCursor } = useUI();
   return (
@@ -60,6 +62,17 @@ function CertCard({ cert, i }: { cert: (typeof CERTIFICATIONS)[number]; i: numbe
 }
 
 export function Education() {
+  const { content } = useContent();
+
+  // Use API data if available and non-empty, fallback to static constants
+  const educations: EducationType[] = (content?.education && content.education.length > 0)
+    ? (content.education as EducationType[])
+    : EDUCATION;
+
+  const certifications: Certification[] = (content?.certifications && content.certifications.length > 0)
+    ? (content.certifications as Certification[])
+    : CERTIFICATIONS;
+
   return (
     <section className="relative py-16 md:py-24 border-t border-line">
       <div className="container-x">
@@ -78,7 +91,7 @@ export function Education() {
               <BookOpen size={12} /> Education
             </div>
             <div className="flex flex-col gap-4">
-              {EDUCATION.map((e, i) => (
+              {educations.map((e, i) => (
                 <EduCard key={e.id} edu={e} i={i} />
               ))}
             </div>
@@ -89,7 +102,7 @@ export function Education() {
               <Award size={12} /> Certifications
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-              {CERTIFICATIONS.map((c, i) => (
+              {certifications.map((c, i) => (
                 <CertCard key={c.id} cert={c} i={i} />
               ))}
             </div>

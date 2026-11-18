@@ -1,10 +1,11 @@
-import { useRef } from 'react';
+import { useRef, useMemo } from 'react';
 import { motion, useMotionValue, useSpring, useTransform, type MotionValue } from 'framer-motion';
 import { ArrowUpRight } from 'lucide-react';
 import { PROJECTS } from '@/constants/content';
 import { BrandIcon } from '@/components/ui/BrandIcon';
 import { useInView } from '@/hooks/useInView';
 import { useUI } from '@/store/ui';
+import { useContent } from '@/hooks/useContent';
 import { cn } from '@/utils/cn';
 import type { Project } from '@/types';
 
@@ -212,6 +213,19 @@ function ProjectCard({ p, i }: { p: Project; i: number }) {
 }
 
 export function Projects() {
+  const { content } = useContent();
+
+  // Use API data if available and non-empty, fallback to static constants
+  const rawProjects: Project[] = (content?.projects && content.projects.length > 0)
+    ? (content.projects as Project[])
+    : PROJECTS;
+
+  // Sort by year descending (latest first)
+  const projects = useMemo(
+    () => [...rawProjects].sort((a, b) => (b.year ?? 0) - (a.year ?? 0)),
+    [rawProjects],
+  );
+
   return (
     <section id="work" className="relative py-16 md:py-24 border-t border-line">
       <div className="container-x">
@@ -227,7 +241,7 @@ export function Projects() {
         </div>
 
         <div className="flex flex-col gap-6">
-          {PROJECTS.map((p, i) => (
+          {projects.map((p, i) => (
             <ProjectCard key={p.id} p={p} i={i} />
           ))}
         </div>

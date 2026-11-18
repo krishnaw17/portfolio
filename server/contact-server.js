@@ -8,6 +8,7 @@ import { authenticate, authorize, generateToken, comparePassword, hashPassword }
 import { contactLimiter, authLimiter, apiLimiter } from './rate-limiter.js';
 import {
   readContent,
+  readContentFromGitHub,
   updateSection,
   addItem,
   updateItem,
@@ -344,8 +345,9 @@ app.post('/api/contact', contactLimiter, async (req, res) => {
 });
 
 // ── Public content endpoint ───────────────────────────────────────────────────
-app.get('/api/content', (_req, res) => {
-  const content = readContent();
+app.get('/api/content', async (_req, res) => {
+  // On Vercel: always read from GitHub to get latest data (not stale serverless cache)
+  const content = await readContentFromGitHub();
   if (!content) {
     return res.status(404).json({ message: 'Content not found.' });
   }

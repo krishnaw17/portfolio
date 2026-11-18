@@ -5,6 +5,8 @@ import { TextReveal } from '@/components/ui/TextReveal';
 import { useInView } from '@/hooks/useInView';
 import { cn } from '@/utils/cn';
 import { useUI } from '@/store/ui';
+import { useContent } from '@/hooks/useContent';
+import type { Skill } from '@/types';
 
 const CATEGORIES = [
   { key: 'all', label: 'All' },
@@ -21,10 +23,16 @@ export function Skills() {
   const [filter, setFilter] = useState<(typeof CATEGORIES)[number]['key']>('all');
   const { ref, inView } = useInView<HTMLDivElement>({ threshold: 0.15, once: true });
   const { setCursor } = useUI();
+  const { content } = useContent();
+
+  // Use API data if available and non-empty, fallback to static constants
+  const allSkills: Skill[] = (content?.skills && content.skills.length > 0)
+    ? (content.skills as Skill[])
+    : SKILLS;
 
   const filtered = useMemo(
-    () => (filter === 'all' ? SKILLS : SKILLS.filter((s) => s.category === filter)),
-    [filter],
+    () => (filter === 'all' ? allSkills : allSkills.filter((s) => s.category === filter)),
+    [filter, allSkills],
   );
 
   return (

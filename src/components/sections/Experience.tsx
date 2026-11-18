@@ -1,19 +1,24 @@
+import { useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { EXPERIENCE } from '@/constants/content';
 import { TextReveal } from '@/components/ui/TextReveal';
 import { useInView } from '@/hooks/useInView';
 import { useUI } from '@/store/ui';
+import { useContent } from '@/hooks/useContent';
+import type { Experience as ExperienceType } from '@/types';
 
 function TimelineItem({
   exp,
   index,
+  total,
 }: {
-  exp: (typeof EXPERIENCE)[number];
+  exp: ExperienceType;
   index: number;
+  total: number;
 }) {
   const { ref, inView } = useInView<HTMLDivElement>({ threshold: 0.2, once: true });
   const { setCursor } = useUI();
-  const isLast = index === EXPERIENCE.length - 1;
+  const isLast = index === total - 1;
 
   return (
     <div ref={ref} className="relative grid gap-6 md:grid-cols-12 pb-12">
@@ -93,7 +98,57 @@ function TimelineItem({
   );
 }
 
+// Function to parse dates like "July 2024", "Sept 2023", "2024", "Present" from period string
+function parseExperienceDate(exp: ExperienceType): number {
+  if (exp.startDate) {
+    const t = new Date(exp.startDate).getTime();
+    if (!isNaN(t)) return t;
+  }
+
+  const period = exp.period || '';
+  // Check if it says 'Present' or 'Current'
+  if (/present|current|ongoing/i.test(period)) {
+    return 9999999999999; // Latest possible
+  }
+
+  // Look for 4-digit years (e.g. 2024, 2025)
+  const years = period.match(/\b(19\d\d|20\d\d)\b/g);
+  if (!years || years.length === 0) return 0;
+
+  // Use the last mentioned year (end date or start date)
+  const latestYear = parseInt(years[years.length - 1], 10);
+
+  // Month map
+  const months: Record<string, number> = {
+    jan: 1, feb: 2, mar: 3, apr: 4, may: 5, jun: 6,
+    jul: 7, aug: 8, sep: 9, oct: 10, nov: 11, dec: 12
+  };
+
+  let foundMonth = 0;
+  for (const [mName, mNum] of Object.entries(months)) {
+    if (new RegExp(mName, 'i').test(period)) {
+      foundMonth = mNum;
+    }
+  }
+
+  return latestYear * 100 + foundMonth;
+}
+
 export function Experience() {
+  const { content } = useContent();
+
+  // Use API data if available and non-empty, fallback to static constants
+  const rawExperience: ExperienceType[] = (content?.experience && content.experience.length > 0)
+    ? (content.experience as ExperienceType[])
+    : EXPERIENCE;
+
+  // Sort by latest parsed date descending (newest experience on top)
+  const experiences = useMemo(() => {
+    return [...rawExperience].sort((a, b) => {
+      return parseExperienceDate(b) - parseExperienceDate(a);
+    });
+  }, [rawExperience]);
+
   return (
     <section id="experience" className="relative py-16 md:py-24 border-t border-line">
       <div className="container-x">
@@ -107,8 +162,8 @@ export function Experience() {
         </div>
 
         <div className="flex flex-col">
-          {EXPERIENCE.map((exp, i) => (
-            <TimelineItem key={exp.id} exp={exp} index={i} />
+          {experiences.map((exp, i) => (
+            <TimelineItem key={exp.id} exp={exp} index={i} total={experiences.length} />
           ))}
         </div>
       </div>

@@ -10,6 +10,8 @@ const DATA_FILE = path.join(DATA_DIR, 'content.json');
 
 // ── In-Memory Cache for warm invocations (Vercel Serverless) ─────────────────
 let cachedData = null;
+let cacheTimestamp = 0;
+const CACHE_TTL_MS = 5 * 1000; // 5 seconds - short TTL so updates reflect quickly
 
 // ── Ensure data directory exists (only for local dev) ────────────────────────
 function ensureDataDir() {
@@ -22,7 +24,9 @@ function ensureDataDir() {
 // ── Read all content ─────────────────────────────────────────────────────────
 
 export function readContent() {
-  if (cachedData) return cachedData;
+  const now = Date.now();
+  // On Vercel: use cache with short TTL so writes are reflected quickly
+  if (cachedData && (now - cacheTimestamp) < CACHE_TTL_MS) return cachedData;
   
   ensureDataDir();
   if (!fs.existsSync(DATA_FILE)) {
@@ -30,23 +34,75 @@ export function readContent() {
   }
   const raw = fs.readFileSync(DATA_FILE, 'utf-8');
   cachedData = JSON.parse(raw);
+  cacheTimestamp = now;
   return cachedData;
+}
+
+// ── Read all content from GitHub (async, for Vercel cold-starts) ─────────────
+
+export async function readContentFromGitHub() {
+  // If running locally, ALWAYS read from local disk
+  if (!process.env.VERCEL) {
+    return readContent();
+  }
+
+  const token = process.env.GITHUB_TOKEN;
+  const repoFullName = process.env.GITHUB_REPO;
+  const filePath = 'server/data/content.json';
+
+  if (!token || !repoFullName) {
+    return readContent();
+  }
+
+  const now = Date.now();
+  if (cachedData && (now - cacheTimestamp) < CACHE_TTL_MS) return cachedData;
+
+  try {
+    const getUrl = `https://api.github.com/repos/${repoFullName}/contents/${filePath}`;
+    const res = await fetch(getUrl, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'User-Agent': 'Portfolio-Admin-Dashboard',
+        Accept: 'application/vnd.github.v3+json',
+      },
+    });
+
+    if (!res.ok) {
+      console.warn('[data-store] GitHub read failed, falling back to cache/local.');
+      return cachedData ?? readContent();
+    }
+
+    const fileInfo = await res.json();
+    const decoded = Buffer.from(fileInfo.content, 'base64').toString('utf-8');
+    cachedData = JSON.parse(decoded);
+    cacheTimestamp = Date.now();
+    console.log('[data-store] ✅ Read content from GitHub.');
+    return cachedData;
+  } catch (err) {
+    console.error('[data-store] readContentFromGitHub error:', err.message);
+    return cachedData ?? readContent();
+  }
 }
 
 // ── Write all content to GitHub API (Git as a DB) ────────────────────────────
 
 export async function writeContent(data) {
   cachedData = data; // Cache instantly for fast subsequent reads
+  cacheTimestamp = Date.now();
+
+  // Always write to local disk first if not in Vercel or if local file exists
+  if (!process.env.VERCEL) {
+    ensureDataDir();
+    fs.writeFileSync(DATA_FILE, JSON.stringify(data, null, 2), 'utf-8');
+    console.log('[data-store] 💾 Successfully saved content to local disk.');
+  }
 
   const token = process.env.GITHUB_TOKEN;
   const repoFullName = process.env.GITHUB_REPO;
   const filePath = 'server/data/content.json'; 
 
-  // If no GitHub credentials, fall back to local filesystem (for local dev)
+  // If no GitHub credentials or not needed, return
   if (!token || !repoFullName) {
-    console.log('[data-store] GITHUB_TOKEN not found. Writing to local disk.');
-    ensureDataDir();
-    fs.writeFileSync(DATA_FILE, JSON.stringify(data, null, 2), 'utf-8');
     return;
   }
 
@@ -171,7 +227,7 @@ export function getSection(section) {
 // ── Update a specific section (replace entire array/object) ──────────────────
 
 export async function updateSection(section, data) {
-  const content = readContent();
+  const content = await readContentFromGitHub();
   if (!content) return null;
   content[section] = data;
   content._meta = { ...content._meta, updatedAt: new Date().toISOString() };
@@ -182,7 +238,7 @@ export async function updateSection(section, data) {
 // ── Add item to an array section ─────────────────────────────────────────────
 
 export async function addItem(section, item) {
-  const content = readContent();
+  const content = await readContentFromGitHub();
   if (!content || !Array.isArray(content[section])) return null;
   content[section].push(item);
   content._meta = { ...content._meta, updatedAt: new Date().toISOString() };
@@ -193,7 +249,7 @@ export async function addItem(section, item) {
 // ── Update item in an array section by id ────────────────────────────────────
 
 export async function updateItem(section, id, updates) {
-  const content = readContent();
+  const content = await readContentFromGitHub();
   if (!content || !Array.isArray(content[section])) return null;
   const idx = content[section].findIndex((item) => item.id === id);
   if (idx === -1) return null;
@@ -206,7 +262,7 @@ export async function updateItem(section, id, updates) {
 // ── Delete item from an array section by id ──────────────────────────────────
 
 export async function deleteItem(section, id) {
-  const content = readContent();
+  const content = await readContentFromGitHub();
   if (!content || !Array.isArray(content[section])) return null;
   const idx = content[section].findIndex((item) => item.id === id);
   if (idx === -1) return null;
@@ -219,6 +275,25 @@ export async function deleteItem(section, id) {
 // ── Initialize with seed data if content.json doesn't exist ──────────────────
 
 export async function initializeIfEmpty(seedData) {
+  // On Vercel, skip local file check — GitHub is the source of truth
+  if (process.env.VERCEL) {
+    // Try reading from GitHub — if it exists and has data, skip init
+    const existing = await readContentFromGitHub();
+    if (existing) {
+      console.log('[data-store] Content already exists in GitHub. Skipping init.');
+      return false;
+    }
+    // Not found — push seed data to GitHub
+    const data = {
+      ...seedData,
+      _meta: { createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() },
+    };
+    await writeContent(data);
+    console.log('[data-store] Initialized GitHub content with seed data.');
+    return true;
+  }
+
+  // Local dev — use filesystem
   ensureDataDir();
   if (!fs.existsSync(DATA_FILE)) {
     const data = {

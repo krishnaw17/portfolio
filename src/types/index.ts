@@ -21,6 +21,7 @@ export interface Experience {
   company: string;
   role: string;
   period: string;
+  startDate?: string; // ISO date string e.g. "2024-07" for sorting
   location: string;
   description: string;
   achievements: string[];

@@ -1,12 +1,13 @@
 import { useEffect, useState } from 'react';
+import type { Project, Experience, Skill, Education, Certification } from '@/types';
 
-interface ContentData {
+export interface ContentData {
   site?: Record<string, unknown>;
-  skills?: unknown[];
-  projects?: unknown[];
-  experience?: unknown[];
-  education?: unknown[];
-  certifications?: unknown[];
+  skills?: Skill[];
+  projects?: Project[];
+  experience?: Experience[];
+  education?: Education[];
+  certifications?: Certification[];
   headlineRotations?: string[];
 }
 
@@ -20,7 +21,7 @@ export function useContent() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    fetch('/api/content')
+    fetch('/api/content', { cache: 'no-store' })
       .then((res) => {
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         return res.json();
